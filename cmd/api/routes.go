@@ -1,8 +1,11 @@
 package main
 
-import "github.com/julienschmidt/httprouter"
+import (
+	"github.com/julienschmidt/httprouter"
+	"net/http"
+)
 
-func (app *application) routes() *httprouter.Router {
+func (app *application) routes() http.Handler {
 	router := httprouter.New()
 
 	router.HandlerFunc("GET", "/status", app.statusHandler)
@@ -10,5 +13,5 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc("GET", "/v1/movies/:id", app.getOneMovie)
 	router.HandlerFunc("GET", "/v1/movies", app.getAllMovies)
 
-	return router
+	return app.enableCORS(router)
 }
