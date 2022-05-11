@@ -10,6 +10,43 @@ type DBModel struct {
 	DB *sql.DB
 }
 
+// GetGenresAll fetches all genres from database, if any or error
+func (m *DBModel) GetGenresAll() ([]*Genre, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+
+	defer cancel()
+
+	query := `select id, genre_name, created_at, updated_at from genres order by genre_name`
+
+	row, err := m.DB.QueryContext(ctx, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var genres []*Genre
+
+	for row.Next(){
+		var g Genre
+
+		err := row.Scan(
+			&g.ID,
+			&g.GenreName,
+			&g.CreatedAt,
+			&g.UpdatedAt,
+			)
+
+		if err != nil {
+			return nil, err
+		}
+
+		genres = append(genres, &g)
+	}
+
+
+	return genres, nil
+}
+
 // Get returns one movie
 func (m *DBModel) Get(id int) (*Movie, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -135,7 +172,7 @@ func (m *DBModel) All() ([]*Movie, error) {
 			return nil, err
 		}
 
-		genres, err  := m.GetGenres(movie.ID)
+		genres, err := m.GetGenres(movie.ID)
 
 		if err != nil {
 			return nil, err

@@ -7,6 +7,22 @@ import (
 	"strconv"
 )
 
+func (app *application) getAllGenres(w http.ResponseWriter, r *http.Request) {
+	genres, err := app.models.DB.GetGenresAll()
+
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, genres, "data")
+
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+}
+
 func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 
