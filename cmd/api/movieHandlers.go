@@ -29,7 +29,7 @@ func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, movie, "movie")
+	err = app.writeJSON(w, http.StatusOK, movie, "data")
 
 	if err != nil {
 		app.logger.Println(err)
@@ -47,7 +47,7 @@ func (app *application) getAllMovies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, movies, "movies")
+	err = app.writeJSON(w, http.StatusOK, movies, "data")
 
 	if err != nil {
 		app.errorJSON(w, err)
